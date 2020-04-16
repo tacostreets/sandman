@@ -1,0 +1,19 @@
+{
+  "name": "sandman",
+  "version": "1.0.0",
+  "description": "web application for itc230",
+  "main": "data.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tacostreets/sandman.git"
+  },
+  "author": "annette ringe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tacostreets/sandman/issues"
+  },
+  "homepage": "https://github.com/tacostreets/sandman#readme"
+}
