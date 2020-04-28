@@ -1,23 +1,65 @@
+'use strict'
 const http = require("http");
 const data = require("./data"); 
-http.createServer((req,res) => {  
-    const path = req.url.toLowerCase();
-    switch(path) {
-        case '/':
-            let authors = data.getAll()
-            let numItems = authors.length
-            res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.end('Welcome to my home page. I have ' + numItems + ' items in my array');  
-            break;
-        case '/about':
-            res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.end('My name is Annette Ringe and I am in the Web Dev Cert program.');
-            break;
-        default:
-            res.writeHead(404, {'Content-Type': 'text/plain'});
-            res.end('404 Not found');
-            break;
-    }
+const allAuthors = data.getAll();
 
- }).listen(process.env.PORT || 3000);
+const express = require("express");
+const bodyParser = require("body-parser")
+
+const app = express();
+const exphbs = require("express-handlebars"); // should be at top of module 
+app.engine('handlebars', exphbs({defaultLayout: false}));
+app.set("view engine", "handlebars");
+
+
+app.set('port', process.env.PORT || 3000);
+app.use(express.static(__dirname + '/public')); // set location for static files
+app.use(bodyParser.urlencoded({extended: true})); // parse form submissions
+
+// send dynamic home file
+app.get('/', (req, res) => {
+    res.render(
+        'layouts/home.handlebars',
+        {authors: allAuthors}
+        ); 
+   });
+
+// query and respond with detail called from index in the data file...handler with for loop
+app.get('/detail', (req,res) => {
+    let authorLastName = req.query.item
+    let author 
+    for(let i = 0; i < allAuthors.length; i++) {
+        author = allAuthors[i];
+        if(author.lastName == authorLastName) {
+            break
+        }
+    }
+// render detail page with author information and html
+    res.render(
+        'layouts/detail.handlebars',
+        {author: author}
+        );
+   });
+
+
+// send plain text response
+app.get('/about', (req, res) => {
+    res.type('text/plain');
+    res.send('My name is Annette Ringe and I am in the Web Dev Cert program.');
+   }); 
+
+
+   //  404 handler
+app.use( (req,res) => {
+    res.type('text/plain'); 
+    res.status(404);
+    res.send('404 - Not found');
+   });
+
+
+   app.listen(app.get('port'), () => {
+    
+   });
+
+   
 
