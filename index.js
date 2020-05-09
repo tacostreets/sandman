@@ -24,17 +24,26 @@ app.get('/', (req, res) => {
         ); 
    });
 
-// query and respond with detail called from index in the data file...handler with for loop
+// query and respond with detail called from index in the data file...handler; with for loop
 app.get('/detail', (req,res) => {
     let authorLastName = req.query.item
-    let author 
+    let author; 
     for(let i = 0; i < allAuthors.length; i++) {
         author = allAuthors[i];
         if(author.lastName == authorLastName) {
-            break
+            break;
         }
     }
-// render detail page with author information and html
+//connect to mongo db....
+// app.get('/', (req, res, next) => {
+//     Book.find({}, (err, items) => {
+//         if (err) return next(err);
+//         console.log(items);
+//         res.render('home', {books: items }); 
+//     });
+//     });
+      
+// render detail page with author information into html
     res.render(
         'layouts/detail.handlebars',
         {author: author}
