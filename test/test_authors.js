@@ -5,7 +5,7 @@ const book = require("../data");
 describe("Book module", () => {
     it("get test: returns requested book", () => {
       const result = book.getItem("Gaiman");
-      expect(result).to.deep.equal({ "firstName": "Neil", "lastName": "Gaiman", "favOne": "American Gods", "favTwo": "Coraline" });
+      expect(result).to.deep.equal({"firstName": "Neil", "lastName": "Gaiman", "favOne": "American Gods", "favTwo": "Coraline" });
     });
     
     it("get test: fails w/ invalid book", () => {
@@ -15,14 +15,10 @@ describe("Book module", () => {
    });
 // addItem test
   
-    it("add test: returns requested book", () => { 
-      const result = book.addItem({firstName: 'Frank', lastName: 'Herbert', favOne: 'Dune', favTwo: 'Dune Messiah'});
-      expect(result).to.deep.equal({
-        firstName: 'Frank', 
-        lastName: 'Herbert', 
-        favOne: 'Dune', 
-        favTwo: 'Dune Messiah'
-    });
+    it("add test: returns requested book", () => {
+      let testData = {firstName: 'Frank', lastName: 'Herbert', favOne: 'Dune', favTwo: 'Dune Messiah'}; 
+      const result = book.addItem(testData);
+      expect(result).to.deep.equal(testData);
   });
     it("add test: fails w/ invalid book", () => {
       const result = book.addItem("fake"); 
@@ -37,7 +33,7 @@ describe("Book module", () => {
         lastName: 'Herbert', 
         favOne: 'Dune', 
         favTwo: 'Dune Messiah'
-    });
+      });
       expect(result).to.be.true; 
     });
     it("delete test: fails w/ invalid book", () => {
@@ -45,6 +41,5 @@ describe("Book module", () => {
       expect(result).to.be.false;
     });
 
-
-
+    
  

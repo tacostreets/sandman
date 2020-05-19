@@ -1,5 +1,8 @@
 <h2>Home: Authors</h2>
 {{#each authors}}
- <li><a href="/detail?item={{lastName}}">{{lastName}}</a></li>
+ <li>
+     <a href="/detail?item={{lastName}}">{{lastName}}</a>
+     <a href="/delete?item={{lastName}}">[delete]</a>
+ </li>
 {{/each}}
 

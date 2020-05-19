@@ -1,7 +1,9 @@
 'use strict'
 const http = require("http");
-const data = require("./data"); 
-const allAuthors = data.getAll();
+http.METHODS // removes eslint error in bash
+// const data = require("./data"); 
+// const allAuthors = data.getAll();
+const authorsDB = require("./models/authors");
 
 const express = require("express");
 const bodyParser = require("body-parser")
@@ -16,39 +18,61 @@ app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public')); // set location for static files
 app.use(bodyParser.urlencoded({extended: true})); // parse form submissions
 
-// send dynamic home file
+//connect to mongo db....
 app.get('/', (req, res) => {
-    res.render(
-        'layouts/home.handlebars',
-        {authors: allAuthors}
+    authorsDB.find({}).lean()
+    .then((allAuthors) =>{
+        res.render(
+            'layouts/home.handlebars',
+            {authors: allAuthors}
         ); 
+    })
+    .catch(err => next(err));
    });
-
-// query and respond with detail called from index in the data file...handler; with for loop
-app.get('/detail', (req,res) => {
-    let authorLastName = req.query.item
-    let author; 
-    for(let i = 0; i < allAuthors.length; i++) {
-        author = allAuthors[i];
-        if(author.lastName == authorLastName) {
-            break;
-        }
-    }
 //connect to mongo db....
 // app.get('/', (req, res, next) => {
-//     Book.find({}, (err, items) => {
+//     authorsDB.find({}, (err, items) => {
 //         if (err) return next(err);
 //         console.log(items);
-//         res.render('home', {books: items }); 
+//         res.render('layouts/home.handlebars', {authors: items }); 
 //     });
-//     });
-      
-// render detail page with author information into html
-    res.render(
-        'layouts/detail.handlebars',
-        {author: author}
-        );
-   });
+    // });
+
+app.get('/detail', (req, res, next) => {
+    let authorLastName = req.query.item
+    authorsDB.findOne({ "lastName": authorLastName }).lean()
+         .then((author) => {
+           res.render(
+            'layouts/detail.handlebars',
+            {author: author});  
+})
+.catch(err => next(err));
+});
+// api version
+app.get('/api/detail', (req, res, next) => {
+    let authorLastName = req.query.item
+    authorsDB.findOne({ "lastName": authorLastName }).lean()
+         .then((author) => {
+           res.json(author); 
+})
+.catch(err => next(err));
+});
+
+// delete method here
+app.get('/delete', (req, res) => {
+    let deleteItem = req.query.item;
+    authorsDB.deleteOne({ "lastName": deleteItem }).lean()
+         .then(() => {
+           res.render(
+            'layouts/delete.handlebars',
+           {author: deleteItem});           
+})
+.catch(err => next(err));
+});
+
+
+
+
 
 
 // send plain text response
@@ -70,5 +94,23 @@ app.use( (req,res) => {
     
    });
 
-   
+       
+// query and respond with detail called from index in the data file...handler; with for loop
+// app.get('/detail', (req,res) => {
+//     let authorLastName = req.query.item
+//     let author; 
+//     for(let i = 0; i < allAuthors.length; i++) {
+//         author = allAuthors[i];
+//         if(author.lastName == authorLastName) {
+//             break;
+//         }
+//     }
+
+// // render detail page with author information into html
+//     res.render(
+//         'layouts/detail.handlebars',
+//         {author: author}
+//         );
+//    });
+  
 
