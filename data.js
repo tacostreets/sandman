@@ -1,30 +1,30 @@
 'use strict'
-let authors = [
-    { firstName : 'Neil', 
-      lastName : 'Gaiman', 
-      favOne : 'American Gods', 
-      favTwo : 'Coraline' },
+// let authors = [
+//     { firstName : 'Neil', 
+//       lastName : 'Gaiman', 
+//       favOne : 'American Gods', 
+//       favTwo : 'Coraline' },
 
-    { firstName : 'Robert', 
-      lastName : 'Heinlein', 
-      favOne : 'The Moon is a Harsh Mistress', 
-      favTwo : 'For Us, The Living' },
+//     { firstName : 'Robert', 
+//       lastName : 'Heinlein', 
+//       favOne : 'The Moon is a Harsh Mistress', 
+//       favTwo : 'For Us, The Living' },
 
-    { firstName : 'Isaac', 
-      lastName : 'Asimov', 
-      favOne : 'I, Robot', 
-      favTwo : 'Foundation' },
+//     { firstName : 'Isaac', 
+//       lastName : 'Asimov', 
+//       favOne : 'I, Robot', 
+//       favTwo : 'Foundation' },
 
-    { firstName : 'Ursula K.', 
-      lastName : 'LeGuin', 
-      favOne : 'A Wizard of Earthsea', 
-      favTwo : 'The Tombs of Atuan'},
+//     { firstName : 'Ursula K.', 
+//       lastName : 'LeGuin', 
+//       favOne : 'A Wizard of Earthsea', 
+//       favTwo : 'The Tombs of Atuan'},
 
-    { firstName : 'Neal', 
-      lastName : 'Stephenson', 
-      favOne : 'Seveneves', 
-      favTwo : 'Anathem'}
-    ];
+//     { firstName : 'Neal', 
+//       lastName : 'Stephenson', 
+//       favOne : 'Seveneves', 
+//       favTwo : 'Anathem'}
+//     ];
 //adding getAll property to the dictionary named exports. getAll is equal to authors function
 exports.getAll = () => authors;
 // getItem property to the dictionary. getItem is calling the item by lastName

@@ -7,6 +7,8 @@ const authorsDB = require("./models/authors");
 
 const express = require("express");
 const bodyParser = require("body-parser")
+// const authorAPI = require('./routes/api.js');
+
 
 const app = express();
 const exphbs = require("express-handlebars"); // should be at top of module 
@@ -17,6 +19,8 @@ app.set("view engine", "handlebars");
 app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public')); // set location for static files
 app.use(bodyParser.urlencoded({extended: true})); // parse form submissions
+app.use('/api', require('cors')()); // set Access-Control-Allow-Origin header for api route
+
 
 //connect to mongo db....
 app.get('/', (req, res) => {
@@ -29,14 +33,10 @@ app.get('/', (req, res) => {
     })
     .catch(err => next(err));
    });
-//connect to mongo db....
-// app.get('/', (req, res, next) => {
-//     authorsDB.find({}, (err, items) => {
-//         if (err) return next(err);
-//         console.log(items);
-//         res.render('layouts/home.handlebars', {authors: items }); 
-//     });
-    // });
+
+// api version of get all using routes folder
+// app.use('/api', authorAPI);
+
 
 app.get('/detail', (req, res, next) => {
     let authorLastName = req.query.item
@@ -48,15 +48,17 @@ app.get('/detail', (req, res, next) => {
 })
 .catch(err => next(err));
 });
-// api version
-app.get('/api/detail', (req, res, next) => {
+
+
+app.get('/api/detail', (req, res) => {
     let authorLastName = req.query.item
     authorsDB.findOne({ "lastName": authorLastName }).lean()
          .then((author) => {
-           res.json(author); 
-})
+           res.json();
+        })
 .catch(err => next(err));
 });
+
 
 // delete method here
 app.get('/delete', (req, res) => {
@@ -69,13 +71,36 @@ app.get('/delete', (req, res) => {
 })
 .catch(err => next(err));
 });
+//api delete version
+app.get('/api/delete', (req, res) => {
+    let deleteItem = req.query.item;
+    authorsDB.deleteOne({ "lastName": deleteItem }).lean()
+        .then(() => {
+           res.json();
+        } else {
+            return res.status(500).send('Error occurred: databes error.');
+        })
+.catch(err => next(err));
+});
 
+//api add version
+// e.g.  http://localhost:3000/api/add?lastName=Simmons&firstName=Dan&favOne=Hyperion&favTwo=TheFallOfHyperion
+app.get('/api/add', (req, res) => {
+    let firstName = req.query.firstName;
+    let lastName = req.query.lastName;
+    let favOne = req.query.favOne;
+    let favTwo = req.query.favTwo;
+    let result = authorsDB.insertMany(
+        [{ firstName : firstName, 
+          lastName : lastName, 
+          favOne : favOne, 
+          favTwo : favTwo }]
+        )
+    res.type("text/plain");
+    res.send(result);
+});
 
-
-
-
-
-// send plain text response
+// send plain text response about
 app.get('/about', (req, res) => {
     res.type('text/plain');
     res.send('My name is Annette Ringe and I am in the Web Dev Cert program.');
