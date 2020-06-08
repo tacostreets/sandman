@@ -7,7 +7,8 @@ const authorsDB = require("./models/authors");
 
 const express = require("express");
 const bodyParser = require("body-parser")
-// const authorAPI = require('./routes/api.js');
+// authorAPI is equal to the require routes in api.js
+const authorAPI = require('./routes/api.js');
 
 
 const app = express();
@@ -34,8 +35,8 @@ app.get('/', (req, res) => {
     .catch(err => next(err));
    });
 
-// api version of get all using routes folder
-// app.use('/api', authorAPI);
+// api using routes folder and all subroutes listed in api.js (attaches onto the end of /api )
+app.use('/api', authorAPI);
 
 
 app.get('/detail', (req, res, next) => {
@@ -49,17 +50,6 @@ app.get('/detail', (req, res, next) => {
 .catch(err => next(err));
 });
 
-
-app.get('/api/detail', (req, res) => {
-    let authorLastName = req.query.item
-    authorsDB.findOne({ "lastName": authorLastName }).lean()
-         .then((author) => {
-           res.json();
-        })
-.catch(err => next(err));
-});
-
-
 // delete method here
 app.get('/delete', (req, res) => {
     let deleteItem = req.query.item;
@@ -70,34 +60,6 @@ app.get('/delete', (req, res) => {
            {author: deleteItem});           
 })
 .catch(err => next(err));
-});
-//api delete version
-app.get('/api/delete', (req, res) => {
-    let deleteItem = req.query.item;
-    authorsDB.deleteOne({ "lastName": deleteItem }).lean()
-        .then(() => {
-           res.json();
-        } else {
-            return res.status(500).send('Error occurred: databes error.');
-        })
-.catch(err => next(err));
-});
-
-//api add version
-// e.g.  http://localhost:3000/api/add?lastName=Simmons&firstName=Dan&favOne=Hyperion&favTwo=TheFallOfHyperion
-app.get('/api/add', (req, res) => {
-    let firstName = req.query.firstName;
-    let lastName = req.query.lastName;
-    let favOne = req.query.favOne;
-    let favTwo = req.query.favTwo;
-    let result = authorsDB.insertMany(
-        [{ firstName : firstName, 
-          lastName : lastName, 
-          favOne : favOne, 
-          favTwo : favTwo }]
-        )
-    res.type("text/plain");
-    res.send(result);
 });
 
 // send plain text response about
@@ -118,24 +80,3 @@ app.use( (req,res) => {
    app.listen(app.get('port'), () => {
     
    });
-
-       
-// query and respond with detail called from index in the data file...handler; with for loop
-// app.get('/detail', (req,res) => {
-//     let authorLastName = req.query.item
-//     let author; 
-//     for(let i = 0; i < allAuthors.length; i++) {
-//         author = allAuthors[i];
-//         if(author.lastName == authorLastName) {
-//             break;
-//         }
-//     }
-
-// // render detail page with author information into html
-//     res.render(
-//         'layouts/detail.handlebars',
-//         {author: author}
-//         );
-//    });
-  
-
