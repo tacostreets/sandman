@@ -1,0 +1,89 @@
+<html>
+<head>
+    <title>React SPA</title>
+   
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <!-- Don't use this in production: -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+
+<body>
+<h2> React SPA </h2>
+ 
+<div id="root"></div>
+<script type="text/babel">  
+  
+  const Welcome = (props) => {
+    return <h1>Hello, {props.name}</h1>
+  }
+
+  const AuthorsList = (props) => {
+    const list_items = props.authors.map((item) => {
+      return<li onClick={props.clickHandler} key="{item.lastName}">{item.lastName}</li>
+    })
+    return <div>
+      <h2>Favorite Sci Fi Authors</h2>
+      <ul>{list_items}</ul>
+       <hr />
+    </div>
+  }
+   
+  const AuthorDetail = (props) => {
+    return <div>
+        <h3>Details for {props.author.lastName}:</h3>
+        <p>firstName: {props.author.firstName}</p>
+        <p>favOne: {props.author.favOne}</p>
+        <p>favTwo: {props.author.favTwo}</p>
+      </div> 
+ //   <div>Details for {props.author.lastName}:</div>
+  }
+
+  class App extends React.Component {
+  constructor(props) {
+    super(props);
+      this.state = { 
+        items: {{{authors}}}, 
+        currentAuthor: {}
+        };
+
+    // This binding is necessary to make `this` work in the callback
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(evt) {
+    let lastName = evt.target.innerText
+    let authors = {}
+ //   let authors = JSON.parse( {{ authors }} )[0]
+    let newAuthor = this.state.items.find((item)=> {
+      return item.lastName == lastName
+    })
+    console.log(evt.target.innerText)
+    console.log(newAuthor)
+      this.setState({
+        currentAuthor: newAuthor
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <Welcome name="Friend" />
+        <AuthorsList authors={this.state.items} clickHandler={this.handleClick}/>
+        <AuthorDetail author={this.state.currentAuthor} clickHandler={this.handleClick} />
+      </div>
+    )
+  }
+}
+
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+</script>
+
+
+
+
+</script>
+
+</body>
+</html>

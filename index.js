@@ -28,8 +28,8 @@ app.get('/', (req, res) => {
     authorsDB.find({}).lean()
     .then((allAuthors) =>{
         res.render(
-            'layouts/home.handlebars',
-            {authors: allAuthors}
+            'layouts/home_react.handlebars',
+            {authors: JSON.stringify(allAuthors)}
         ); 
     })
     .catch(err => next(err));
